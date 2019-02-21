@@ -1,5 +1,6 @@
 import os
 import json
+import myFunctions as mf
 
 endpointType = os.environ.get("endpointType")
 endpointUrl = os.environ.get("endpointUrl")
@@ -9,7 +10,7 @@ logFileLocation = "/log.txt"
 tempFolder = "/temp/"
 
 #Read input file
-with open(inputFileLocation) as f:
+with open(inputFileLocation) as f:  
     inputArgs = json.load(f)
 
 #############################################
@@ -19,16 +20,14 @@ currentStage = inputArgs["stage"]
 print("Stage: %s" % currentStage)
 
 if currentStage == 1:
-    #Do run 1
+    outputJson = mf.stageOne(endpointType, endpointUrl)
 if currentStage == 2:
-    #Do run 2
+    outputJson = mf.stageTwo()
 if currentStage == 3:
-    #Do run 3
+    outputJson = mf.stageThree()
 if currentStage == 4:
-    #Do run 4
-
-outputJson = {"endpointType": endpointType, "endpointUrl": endpointUrl }
+    outputJson = mf.stageFour()
 
 # Write output to file
-with open('output.txt', 'w') as f:
+with open(outputFileLocation, 'w') as f:
     f.write(json.dumps(outputJson))
