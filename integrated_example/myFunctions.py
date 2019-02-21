@@ -38,8 +38,14 @@ def start_at_A(df): # df: import data in DataFrame Format
     A_randoms_byte = np.array(A_randoms).tobytes() ### Local file: Only A ###
     C_matrix_byte = np.array(C_matrix).tobytes() ### Shared file with B ###
     Sum_noises_A_byte = np.array(Sum_noises_A).tobytes() ### Shared file with B ###
-    
+
     print("Start A took", time.time() - start_time, "to run")
+
+    return {
+        "randomBytes": A_randoms_byte,
+        "matrixBytes": C_matrix_byte,
+        "sumNoiseBytes": Sum_noises_A_byte
+    }
 
 
 ################################################################

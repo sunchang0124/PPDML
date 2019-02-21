@@ -5,5 +5,7 @@ RUN touch /input.txt
 RUN touch /output.txt
 
 COPY run.py /run.py
+COPY myStages.py /myStages.py
+COPY myFunctions.py /myFunctions.py
 
 CMD ["python", "run.py"]
