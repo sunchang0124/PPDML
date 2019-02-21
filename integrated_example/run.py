@@ -1,6 +1,6 @@
 import os
 import json
-import myFunctions as mf
+import myStages as ms
 
 endpointType = os.environ.get("endpointType")
 endpointUrl = os.environ.get("endpointUrl")
@@ -20,13 +20,13 @@ currentStage = inputArgs["stage"]
 print("Stage: %s" % currentStage)
 
 if currentStage == 1:
-    outputJson = mf.stageOne(endpointType, endpointUrl)
+    outputJson = ms.stageOne(endpointType, endpointUrl)
 if currentStage == 2:
-    outputJson = mf.stageTwo()
+    outputJson = ms.stageTwo()
 if currentStage == 3:
-    outputJson = mf.stageThree()
+    outputJson = ms.stageThree()
 if currentStage == 4:
-    outputJson = mf.stageFour()
+    outputJson = ms.stageFour()
 
 # Write output to file
 with open(outputFileLocation, 'w') as f:
