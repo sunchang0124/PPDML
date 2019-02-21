@@ -6,7 +6,8 @@ import myFunctions as mf
 import base64
 
 def stageOne(endpointUrl, tmpFolderLocation):
-    dataString=requests.get(endpointUrl).content
+    response=requests.get(endpointUrl)
+    dataString=response.text
     myData=pd.read_csv(io.StringIO(dataString.decode('utf-8')))
     
     #Do the actual magic
