@@ -39,7 +39,7 @@ def start_at_A(df): # df: import data in DataFrame Format
     C_matrix_byte = np.array(C_matrix).tobytes() ### Shared file with B ###
     Sum_noises_A_byte = np.array(Sum_noises_A).tobytes() ### Shared file with B ###
 
-    print("Start A took", time.time() - start_time, "to run")
+    # print("Start A took " + (time.time() - start_time) + " to run")
 
     return {
         "randomBytes": A_randoms_byte,
@@ -95,7 +95,7 @@ def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in Dat
     Sum_noises_AB_byte = np.array(Sum_noises_AB).tobytes() ### Only at B ###
     Sum_noises_B_byte = np.array(Sum_noises_B).tobytes() ### shared with A ###
 
-    print "Start B took", time.time() - start_time, "to run"
+    # print("Start B took" + (time.time() - start_time) + "to run")
 
 
 ################################################################
@@ -138,7 +138,7 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
     Sum_noises_B_Arand_byte = np.array(Sum_noises_B_Arand).tobytes()
     XaTXa_byte = np.array(XaTXa).tobytes()
 
-    print "Communication A took", time.time() - start_time, "to run"
+    # print("Communication A took" + (time.time() - start_time) + "to run")
 
 
 ################################################################
@@ -186,7 +186,7 @@ def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, Sum_noises_AB, B
 
     b1 = pp_out[1:]
     b0 = pp_out.item(0)
-    print('Coefficients: \n' ,b1)
+    print('Coefficients: \n',  b1)
     print('Intercept: ', b0)
 
-    print "Final at B took", time.time() - start_time, "to run"
+    # print("Final at B took" + (time.time() - start_time) + "to run")
