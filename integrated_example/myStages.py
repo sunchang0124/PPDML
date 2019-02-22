@@ -6,14 +6,11 @@ import myFunctions as mf
 import base64
 
 def stageOne(endpointUrl, tmpFolderLocation):
-    response=requests.get(endpointUrl)
-    dataString=response.text
-    myData=pd.read_csv(io.StringIO(dataString.decode('utf-8')))
+    #dataString=requests.get(endpointUrl).text
+    myData=pd.read_csv(endpointUrl)
     
     #Do the actual magic
     myResult = mf.start_at_A(myData)
-
-    print(myResult)
 
     f = open(tmpFolderLocation + '/randomBytes', 'wb')
     f.write(myResult["randomBytes"])

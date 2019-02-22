@@ -1,3 +1,4 @@
+docker rmi fairhealth/ppdml
 docker build --no-cache -t fairhealth/ppdml ./
 
 @echo off
