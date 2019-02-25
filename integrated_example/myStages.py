@@ -12,38 +12,36 @@ def stageOne(endpointUrl, tmpFolderLocation):
     #Do the actual magic
     myResult = mf.start_at_A(myData)
 
-    f = open(tmpFolderLocation + '/randomBytes', 'wb')
-    f.write(myResult["randomBytes"])
+    f = open(tmpFolderLocation + '/randomBytes', 'w')
+    f.write(json.dumps(myResult["randomBytes"]))
     f.close()
 
     del myResult["randomBytes"]
-
-    myResult["matrixBytes"] = base64.b64encode(myResult["matrixBytes"]).decode()
-    myResult["sumNoiseBytes"] = base64.b64encode(myResult["sumNoiseBytes"]).decode()
 
     return myResult
 
 def stageTwo(endpointUrl, tmpFolderLocation, inputArgs):
     myData=pd.read_csv(endpointUrl)
     
-    matrixBytes = base64.b64decode(bytearray(inputArgs["matrixBytes"]))
-    sumNoiseBytes = base64.b64decode(bytearray(inputArgs["sumNoiseBytes"]))
+    myResult = mf.start_at_B(myData, inputArgs["matrixBytes"], inputArgs["sumNoiseBytes"], inputArgs["divideSet"])
     
-    myResult = mf.start_at_B(myData, matrixBytes, sumNoiseBytes, inputArgs["divideSet"])
-    
-    f = open(tmpFolderLocation + '/randomBytes', 'wb')
-    f.write(myResult["randomBytes"])
+    f = open(tmpFolderLocation + '/randomBytes', 'w')
+    f.write(json.dumps(myResult["randomBytes"]))
     f.close()
 
     del myResult["randomBytes"]
     
-    myResult["sumNoisesAB"] = base64.b64encode(myResult["sumNoisesAB"]).decode()
-    myResult["sumNoisesB"] = base64.b64encode(myResult["sumNoisesB"]).decode()
-    
     return myResult
 
-def stageThree():
-    return {"test": "three"}
+def stageThree(endpointUrl, tmpFolderLocation, inputArgs):
+    myData=pd.read_csv(endpointUrl)
+    
+    with open(tmpFolderLocation + '/randomBytes') as binary_file:
+        A_randoms = json.loads(binary_file.read())
+    
+    myResult = mf.communication_at_A(myData, A_randoms, inputArgs["sumNoisesAB"], inputArgs["divideSet"])
+    
+    return myResult
 
 def stageFour():
     return {"test": "four"}

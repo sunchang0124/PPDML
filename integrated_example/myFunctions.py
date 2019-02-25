@@ -9,8 +9,9 @@ from numpy.linalg import inv
 ### Start at A ###
 def start_at_A(df): # df: import data in DataFrame Format
     start_time = time.time()
-
-    X_a = df[['num_lab_procedures','num_medications']].iloc[0:1000] #.drop(PI, axis = 1)
+    
+    col = df.columns
+    X_a = df[col[0:5]].iloc[0:1000] #.drop(PI, axis = 1)
     B_divide_set = 10
 
     # Add one columns with all values of 1 to dataset which uses to calculate b0
@@ -35,9 +36,9 @@ def start_at_A(df): # df: import data in DataFrame Format
         Sum_noises_A.append(np.add(X_a.iloc[:,i], np.dot(C_matrix[i], A_randoms[i])))
 
     ### To Byte ###
-    A_randoms_byte = np.array(A_randoms).tobytes() ### Local file: Only A ###
-    C_matrix_byte = np.array(C_matrix).tobytes() ### Shared file with B ###
-    Sum_noises_A_byte = np.array(Sum_noises_A).tobytes() ### Shared file with B ###
+    A_randoms_byte = np.array(A_randoms).tolist() ### Local file: Only A ###
+    C_matrix_byte = np.array(C_matrix).tolist() ### Shared file with B ###
+    Sum_noises_A_byte = np.array(Sum_noises_A).tolist() ### Shared file with B ###
 
     # print("Start A took " + (time.time() - start_time) + " to run")
 
@@ -54,8 +55,12 @@ def start_at_A(df): # df: import data in DataFrame Format
 ### At site B ###
 def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in DataFrame Format
     start_time = time.time()
-
-    X_b = df[['diag_1', 'diag_2','diag_3']].iloc[0:1000] #.drop(PI, axis = 1)
+    
+    C_matrix = np.array(C_matrix)
+    Sum_noises_A = np.array(Sum_noises_A)
+    
+    col = df.columns
+    X_b = df[col[0:5]].iloc[0:1000] #.drop(PI, axis = 1)
     B_divide_set = Divide_set
 
     len_B = len(X_b.columns)
@@ -92,14 +97,15 @@ def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in Dat
         Sum_noises_AB.append(Sum_noises_temp)
 
     ### To Byte ###
-    B_random_set_byte = np.array(B_random_set).tobytes() ### Only at B ###
-    Sum_noises_AB_byte = np.array(Sum_noises_AB).tobytes() ### Only at B ###
-    Sum_noises_B_byte = np.array(Sum_noises_B).tobytes() ### shared with A ###
+    B_random_set_byte = np.array(B_random_set).tolist() ### Only at B ###
+    Sum_noises_AB_byte = np.array(Sum_noises_AB).tolist() ### Only at B ###
+    Sum_noises_B_byte = np.array(Sum_noises_B).tolist() ### shared with A ###
 
     return {
         "randomBytes": B_random_set_byte,
         "sumNoisesAB": Sum_noises_AB_byte,
-        "sumNoisesB": Sum_noises_B_byte
+        "sumNoisesB": Sum_noises_B_byte,
+        "divideSet": Divide_set
     }
 
 
@@ -108,6 +114,9 @@ def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in Dat
 
 def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
     start_time = time.time()
+    
+    A_randoms = np.array(A_randoms)
+    Sum_noises_B = np.array(Sum_noises_B)
 
     X_a = df[['num_lab_procedures','num_medications']].iloc[0:1000]
     b0 = np.ones((1, len(X_a))).tolist()[0]
@@ -139,11 +148,15 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
     XaTXa = np.matrix(X_a).T * np.matrix(X_a)
 
     ### To Byte ###
-    A_randoms_Sumset_byte = np.array(A_randoms_Sumset).tobytes()
-    Sum_noises_B_Arand_byte = np.array(Sum_noises_B_Arand).tobytes()
-    XaTXa_byte = np.array(XaTXa).tobytes()
-
-    # print("Communication A took" + (time.time() - start_time) + "to run")
+    A_randoms_Sumset_byte = np.array(A_randoms_Sumset).tolist()
+    Sum_noises_B_Arand_byte = np.array(Sum_noises_B_Arand).tolist()
+    XaTXa_byte = np.array(XaTXa).tolist()
+    
+    return {
+        "randomsSumSet": A_randoms_Sumset_byte,
+        "sumNoisesBARand": Sum_noises_B_Arand_byte,
+        "XaTXa": XaTXa_byte
+    }
 
 
 ################################################################

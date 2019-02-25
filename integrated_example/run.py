@@ -24,7 +24,7 @@ if currentStage == 1:
 if currentStage == 2:
     outputJson = ms.stageTwo(endpointUrl, tempFolder, inputArgs)
 if currentStage == 3:
-    outputJson = ms.stageThree()
+    outputJson = ms.stageThree(endpointUrl, tempFolder, inputArgs)
 if currentStage == 4:
     outputJson = ms.stageFour()
 
