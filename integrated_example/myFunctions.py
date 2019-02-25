@@ -60,7 +60,7 @@ def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in Dat
     Sum_noises_A = np.array(Sum_noises_A)
     
     col = df.columns
-    X_b = df[col[0:5]].iloc[0:1000] #.drop(PI, axis = 1)
+    X_b = df[col[0:5]].iloc[0:1000] 
     B_divide_set = Divide_set
 
     len_B = len(X_b.columns)
@@ -118,7 +118,8 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
     A_randoms = np.array(A_randoms)
     Sum_noises_B = np.array(Sum_noises_B)
 
-    X_a = df[['num_lab_procedures','num_medications']].iloc[0:1000]
+    col = df.columns
+    X_a = df[col[0:5]].iloc[0:1000]
     b0 = np.ones((1, len(X_a))).tolist()[0]
     X_a.insert(loc=0, column='b0', value=b0)
     B_divide_set = Divide_set
@@ -171,7 +172,8 @@ def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, Sum_noises_AB, B
     XaTXa = np.array(XaTXa)
     Sum_noises_AB = np.array(Sum_noises_AB)
 
-    X_b = df[['diag_1', 'diag_2','diag_3']].iloc[0:1000] 
+    col = df.columns
+    X_b = df[col[0:5]].iloc[0:1000] 
     B_divide_set = Divide_set
     len_A = len(A_randoms_Sumset)
     len_B = len(Sum_noises_AB)
