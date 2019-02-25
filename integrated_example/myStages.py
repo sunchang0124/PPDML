@@ -23,8 +23,24 @@ def stageOne(endpointUrl, tmpFolderLocation):
 
     return myResult
 
-def stageTwo():
-    return {"test": "two"}
+def stageTwo(endpointUrl, tmpFolderLocation, inputArgs):
+    myData=pd.read_csv(endpointUrl)
+    
+    matrixBytes = base64.b64decode(inputArgs["matrixBytes"])
+    sumNoiseBytes = base64.b64decode(inputArgs["sumNoiseBytes"])
+    
+    myResult = mf.start_at_B(myData, matrixBytes, sumNoiseBytes, inputArgs["divideSet"])
+    
+    f = open(tmpFolderLocation + '/randomBytes', 'wb')
+    f.write(myResult["randomBytes"])
+    f.close()
+
+    del myResult["randomBytes"]
+    
+    myResult["sumNoisesAB"] = str(base64.b64encode(myResult["sumNoisesAB"]))
+    myResult["sumNoisesB"] = str(base64.b64encode(myResult["sumNoisesB"]))
+    
+    return myResult
 
 def stageThree():
     return {"test": "three"}

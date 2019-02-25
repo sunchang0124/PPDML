@@ -22,7 +22,7 @@ print("Stage: %s" % currentStage)
 if currentStage == 1:
     outputJson = ms.stageOne(endpointUrl, tempFolder)
 if currentStage == 2:
-    outputJson = ms.stageTwo()
+    outputJson = ms.stageTwo(endpointUrl, tempFolder, inputArgs)
 if currentStage == 3:
     outputJson = ms.stageThree()
 if currentStage == 4:

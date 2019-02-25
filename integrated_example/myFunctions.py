@@ -44,7 +44,8 @@ def start_at_A(df): # df: import data in DataFrame Format
     return {
         "randomBytes": A_randoms_byte,
         "matrixBytes": C_matrix_byte,
-        "sumNoiseBytes": Sum_noises_A_byte
+        "sumNoiseBytes": Sum_noises_A_byte,
+        "divideSet": B_divide_set
     }
 
 
@@ -95,7 +96,11 @@ def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in Dat
     Sum_noises_AB_byte = np.array(Sum_noises_AB).tobytes() ### Only at B ###
     Sum_noises_B_byte = np.array(Sum_noises_B).tobytes() ### shared with A ###
 
-    # print("Start B took" + (time.time() - start_time) + "to run")
+    return {
+        "randomBytes": B_random_set_byte,
+        "sumNoisesAB": Sum_noises_AB_byte,
+        "sumNoisesB": Sum_noises_B_byte
+    }
 
 
 ################################################################
