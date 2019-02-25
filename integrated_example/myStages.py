@@ -18,16 +18,16 @@ def stageOne(endpointUrl, tmpFolderLocation):
 
     del myResult["randomBytes"]
 
-    myResult["matrixBytes"] = base64.b64encode(myResult["matrixBytes"])
-    myResult["sumNoiseBytes"] = base64.b64encode(myResult["sumNoiseBytes"])
+    myResult["matrixBytes"] = base64.b64encode(myResult["matrixBytes"]).decode()
+    myResult["sumNoiseBytes"] = base64.b64encode(myResult["sumNoiseBytes"]).decode()
 
     return myResult
 
 def stageTwo(endpointUrl, tmpFolderLocation, inputArgs):
     myData=pd.read_csv(endpointUrl)
     
-    matrixBytes = base64.b64decode(inputArgs["matrixBytes"])
-    sumNoiseBytes = base64.b64decode(inputArgs["sumNoiseBytes"])
+    matrixBytes = base64.b64decode(bytearray(inputArgs["matrixBytes"]))
+    sumNoiseBytes = base64.b64decode(bytearray(inputArgs["sumNoiseBytes"]))
     
     myResult = mf.start_at_B(myData, matrixBytes, sumNoiseBytes, inputArgs["divideSet"])
     
@@ -37,8 +37,8 @@ def stageTwo(endpointUrl, tmpFolderLocation, inputArgs):
 
     del myResult["randomBytes"]
     
-    myResult["sumNoisesAB"] = base64.b64encode(myResult["sumNoisesAB"])
-    myResult["sumNoisesB"] = base64.b64encode(myResult["sumNoisesB"])
+    myResult["sumNoisesAB"] = base64.b64encode(myResult["sumNoisesAB"]).decode()
+    myResult["sumNoisesB"] = base64.b64encode(myResult["sumNoisesB"]).decode()
     
     return myResult
 
