@@ -43,5 +43,12 @@ def stageThree(endpointUrl, tmpFolderLocation, inputArgs):
     
     return myResult
 
-def stageFour():
-    return {"test": "four"}
+def stageFour(endpointUrl, tmpFolderLocation, inputArgs):
+    myData=pd.read_csv(endpointUrl)
+    
+    with open(tmpFolderLocation + '/randomBytes') as binary_file:
+        B_randoms = json.loads(binary_file.read())
+        
+    myResult = mf.Final_at_B(myData, inputArgs["randomsSumSet"], inputArgs["sumNoisesBARand"], inputArgs["XaTXa"], inputArgs["sumNoisesAB"], B_randoms, inputArgs["divideSet"])
+    
+    return myResult

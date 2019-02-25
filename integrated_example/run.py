@@ -26,7 +26,7 @@ if currentStage == 2:
 if currentStage == 3:
     outputJson = ms.stageThree(endpointUrl, tempFolder, inputArgs)
 if currentStage == 4:
-    outputJson = ms.stageFour()
+    outputJson = ms.stageFour(endpointUrl, tempFolder, inputArgs)
 
 # Write output to file
 with open(outputFileLocation, 'w') as f:

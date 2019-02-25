@@ -155,7 +155,8 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
     return {
         "randomsSumSet": A_randoms_Sumset_byte,
         "sumNoisesBARand": Sum_noises_B_Arand_byte,
-        "XaTXa": XaTXa_byte
+        "XaTXa": XaTXa_byte,
+        "divideSet": Divide_set
     }
 
 
@@ -164,6 +165,11 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
 
 def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, Sum_noises_AB, B_random_set, Divide_set):
     start_time = time.time()
+    
+    A_randoms_Sumset = np.array(A_randoms_Sumset)
+    Sum_noises_B_Arand = np.array(Sum_noises_B_Arand)
+    XaTXa = np.array(XaTXa)
+    Sum_noises_AB = np.array(Sum_noises_AB)
 
     X_b = df[['diag_1', 'diag_2','diag_3']].iloc[0:1000] 
     B_divide_set = Divide_set
@@ -206,5 +212,8 @@ def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, Sum_noises_AB, B
     b0 = pp_out.item(0)
     print('Coefficients: \n',  b1)
     print('Intercept: ', b0)
-
-    # print("Final at B took" + (time.time() - start_time) + "to run")
+    
+    return {
+        "coefficients": b1,
+        "intercept": b0
+    }
