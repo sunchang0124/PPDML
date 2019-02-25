@@ -18,8 +18,8 @@ def stageOne(endpointUrl, tmpFolderLocation):
 
     del myResult["randomBytes"]
 
-    myResult["matrixBytes"] = str(base64.b64encode(myResult["matrixBytes"]))
-    myResult["sumNoiseBytes"] = str(base64.b64encode(myResult["sumNoiseBytes"]))
+    myResult["matrixBytes"] = base64.b64encode(myResult["matrixBytes"])
+    myResult["sumNoiseBytes"] = base64.b64encode(myResult["sumNoiseBytes"])
 
     return myResult
 
@@ -37,8 +37,8 @@ def stageTwo(endpointUrl, tmpFolderLocation, inputArgs):
 
     del myResult["randomBytes"]
     
-    myResult["sumNoisesAB"] = str(base64.b64encode(myResult["sumNoisesAB"]))
-    myResult["sumNoisesB"] = str(base64.b64encode(myResult["sumNoisesB"]))
+    myResult["sumNoisesAB"] = base64.b64encode(myResult["sumNoisesAB"])
+    myResult["sumNoisesB"] = base64.b64encode(myResult["sumNoisesB"])
     
     return myResult
 
