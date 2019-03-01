@@ -7,12 +7,12 @@ from numpy.linalg import inv
 
 
 ### Start at A ###
-def start_at_A(df): # df: import data in DataFrame Format
+def start_at_A(df, Divide_set, C_seed, C_min, C_max): # df: import data in DataFrame Format
     start_time = time.time()
     
     col = df.columns
     X_a = df[col[0:5]].iloc[0:1000] #.drop(PI, axis = 1)
-    B_divide_set = 10
+    B_divide_set = Divide_set
 
     # Add one columns with all values of 1 to dataset which uses to calculate b0
     b0 = np.ones((1, len(X_a))).tolist()[0]
@@ -28,8 +28,8 @@ def start_at_A(df): # df: import data in DataFrame Format
         
     C_matrix = [] # C_noises is shared between A and B 
     for i in range(0, len_A):
-        np.random.seed(2)
-        C_matrix.append(np.random.randint(0,5, (len(X_a.iloc[:,i]), len(X_a.iloc[:,i]))))
+        np.random.seed(C_seed)
+        C_matrix.append(np.random.randint(C_min,C_max, (len(X_a.iloc[:,i]), len(X_a.iloc[:,i]))))
 
     Sum_noises_A = [] # which will be sent to B
     for i in range(0, len_A):
@@ -44,19 +44,24 @@ def start_at_A(df): # df: import data in DataFrame Format
 
     return {
         "randomBytes": A_randoms_byte,
-        "matrixBytes": C_matrix_byte,
+        # "matrixBytes": C_matrix_byte,
         "sumNoiseBytes": Sum_noises_A_byte,
-        "divideSet": B_divide_set
+        # "divideSet": B_divide_set
     }
 
 
 ################################################################
 ################################################################
 ### At site B ###
-def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in DataFrame Format
+def start_at_B(df, C_seed, C_min, C_max, Sum_noises_A, Divide_set): # df: import data in DataFrame Format
     start_time = time.time()
     
-    C_matrix = np.array(C_matrix)
+    # C_matrix = np.array(C_matrix)
+    C_matrix = [] # seeds, range of C_noises is shared between A and B 
+    for i in range(0, len_A):
+        np.random.seed(C_seed)
+        C_matrix.append(np.random.randint(C_min,C_max, (len(Sum_noises_A[i,:]), len(Sum_noises_A[i,:]))))
+
     Sum_noises_A = np.array(Sum_noises_A)
     
     col = df.columns
@@ -105,7 +110,7 @@ def start_at_B(df, C_matrix, Sum_noises_A, Divide_set): # df: import data in Dat
         "randomBytes": B_random_set_byte,
         "sumNoisesAB": Sum_noises_AB_byte,
         "sumNoisesB": Sum_noises_B_byte,
-        "divideSet": Divide_set
+        # "divideSet": Divide_set
     }
 
 
@@ -157,7 +162,7 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
         "randomsSumSet": A_randoms_Sumset_byte,
         "sumNoisesBARand": Sum_noises_B_Arand_byte,
         "XaTXa": XaTXa_byte,
-        "divideSet": Divide_set
+        # "divideSet": Divide_set
     }
 
 
