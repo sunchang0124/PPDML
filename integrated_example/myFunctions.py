@@ -58,7 +58,7 @@ def start_at_B(df, C_seed, C_min, C_max, Sum_noises_A, Divide_set): # df: import
     
     # C_matrix = np.array(C_matrix)
     C_matrix = [] # seeds, range of C_noises is shared between A and B 
-    for i in range(0, Sum_noises_A):
+    for i in range(0, len(Sum_noises_A)):
         np.random.seed(C_seed)
         C_matrix.append(np.random.randint(C_min,C_max, (len(Sum_noises_A[i,:]), len(Sum_noises_A[i,:]))))
 
