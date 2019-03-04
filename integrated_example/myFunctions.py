@@ -5,13 +5,11 @@ import requests
 import json
 from numpy.linalg import inv
 
-
 ### Start at A ###
 def start_at_A(df, Divide_set, C_seed, C_min, C_max): # df: import data in DataFrame Format
     start_time = time.time()
     
-    col = df.columns
-    X_a = df[col[0:5]].iloc[0:1000] #.drop(PI, axis = 1)
+    X_a = df #.drop(PI, axis = 1)
     B_divide_set = Divide_set
 
     # Add one columns with all values of 1 to dataset which uses to calculate b0
@@ -23,7 +21,7 @@ def start_at_A(df, Divide_set, C_seed, C_min, C_max): # df: import data in DataF
     # Generate random numbers and add to data at Data Site A
     A_randoms = []
     for i in range(0, len_A):
-        np.random.seed(1)
+        # np.random.seed(1)
         A_randoms.append(np.random.randint(0,5, len(X_a.iloc[:,i])))
         
     C_matrix = [] # C_noises is shared between A and B 
@@ -53,19 +51,16 @@ def start_at_A(df, Divide_set, C_seed, C_min, C_max): # df: import data in DataF
 ################################################################
 ################################################################
 ### At site B ###
-def start_at_B(df, C_seed, C_min, C_max, Sum_noises_A, Divide_set): # df: import data in DataFrame Format
+def start_at_B(df , C_seed, C_min, C_max, Sum_noises_A, Divide_set): # df: import data in DataFrame Format
     start_time = time.time()
     
-    # C_matrix = np.array(C_matrix)
-    C_matrix = [] # seeds, range of C_noises is shared between A and B 
-    for i in range(0, len_A):
-        np.random.seed(C_seed)
-        C_matrix.append(np.random.randint(C_min,C_max, (len(Sum_noises_A[i,:]), len(Sum_noises_A[i,:]))))
-
     Sum_noises_A = np.array(Sum_noises_A)
+    C_matrix = [] # seeds, range of C_noises is shared between A and B 
+    for i in range(0, len(Sum_noises_A)):
+        np.random.seed(C_seed)
+        C_matrix.append(np.random.randint(C_min ,C_max , (len(Sum_noises_A[i,:]), len(Sum_noises_A[i,:]))))
     
-    col = df.columns
-    X_b = df[col[0:5]].iloc[0:1000] 
+    X_b = df 
     B_divide_set = Divide_set
 
     len_B = len(X_b.columns)
@@ -79,7 +74,7 @@ def start_at_B(df, C_seed, C_min, C_max, Sum_noises_A, Divide_set): # df: import
 
     B_random_set = []
     for i in range(0, len(Sum_noises_A)):
-        np.random.seed(3)
+        # np.random.seed(3)
         B_random_set.append(np.random.randint(0,5, int(len(X_b.iloc[:,0])/B_divide_set))) 
 
     Sum_noises_B = [] # which will be send to A
@@ -117,16 +112,14 @@ def start_at_B(df, C_seed, C_min, C_max, Sum_noises_A, Divide_set): # df: import
 ################################################################
 ################################################################
 
-def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
+def communication_at_A(df, A_randoms, Sum_noises_AB, Sum_noises_B, Divide_set):
     start_time = time.time()
     
     A_randoms = np.array(A_randoms)
     Sum_noises_B = np.array(Sum_noises_B)
+    Sum_noises_AB = np.array(Sum_noises_AB)
 
-    col = df.columns
-    X_a = df[col[0:5]].iloc[0:1000]
-    b0 = np.ones((1, len(X_a))).tolist()[0]
-    X_a.insert(loc=0, column='b0', value=b0)
+    X_a = df
     B_divide_set = Divide_set
     len_A = len(X_a.columns)
 
@@ -147,7 +140,7 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
     for n in range(0, len(Sum_noises_B)):
         temp = []
         for i in range(0, len_A):
-            temp.append(np.dot(A_randoms[i],Sum_noises_B[n][i]))
+            temp.append(np.subtract(Sum_noises_AB[n][i], np.dot(A_randoms[i],Sum_noises_B[n][i])))
         Sum_noises_B_Arand.append(temp)
 
     # Calculate X_a.T * X_a locally at data site A 
@@ -169,19 +162,17 @@ def communication_at_A(df, A_randoms, Sum_noises_B, Divide_set):
 ################################################################
 ################################################################
 
-def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, Sum_noises_AB, B_random_set, Divide_set):
+def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, B_random_set, Divide_set):
     start_time = time.time()
     
     A_randoms_Sumset = np.array(A_randoms_Sumset)
     Sum_noises_B_Arand = np.array(Sum_noises_B_Arand)
     XaTXa = np.array(XaTXa)
-    Sum_noises_AB = np.array(Sum_noises_AB)
 
-    col = df.columns
-    X_b = df[col[0:5]].iloc[0:1000] 
+    X_b = df
     B_divide_set = Divide_set
     len_A = len(A_randoms_Sumset)
-    len_B = len(Sum_noises_AB)
+    len_B = len(Sum_noises_B_Arand)
 
     ### At site B ###
     rand_sums = []
@@ -195,12 +186,10 @@ def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, Sum_noises_AB, B
     for n in range(0, len_B):
         out = []
         for i in range(0, len_A):
-            out.append(Sum_noises_AB[n][i] - Sum_noises_B_Arand[n][i] + rand_sums[i]) 
+            out.append(Sum_noises_B_Arand[n][i] + rand_sums[i]) 
         outcomes.append(out)
 
-
     ### Compute b0, b1 ###
-    # XaTXa = np.load('/data/XaTXa.npy')
     XbTXb = np.matrix(X_b).T * np.matrix(X_b)
 
     XaTXb = np.matrix(outcomes)[:-1]
