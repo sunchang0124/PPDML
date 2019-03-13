@@ -42,9 +42,7 @@ def start_at_A(df, Divide_set, C_seed, C_min, C_max): # df: import data in DataF
 
     return {
         "randomBytes": A_randoms_byte,
-        # "matrixBytes": C_matrix_byte,
-        "sumNoiseBytes": Sum_noises_A_byte,
-        # "divideSet": B_divide_set
+        "sumNoiseBytes": Sum_noises_A_byte
     }
 
 
@@ -104,8 +102,7 @@ def start_at_B(df , C_seed, C_min, C_max, Sum_noises_A, Divide_set): # df: impor
     return {
         "randomBytes": B_random_set_byte,
         "sumNoisesAB": Sum_noises_AB_byte,
-        "sumNoisesB": Sum_noises_B_byte,
-        # "divideSet": Divide_set
+        "sumNoisesB": Sum_noises_B_byte
     }
 
 
@@ -154,8 +151,7 @@ def communication_at_A(df, A_randoms, Sum_noises_AB, Sum_noises_B, Divide_set):
     return {
         "randomsSumSet": A_randoms_Sumset_byte,
         "sumNoisesBARand": Sum_noises_B_Arand_byte,
-        "XaTXa": XaTXa_byte,
-        # "divideSet": Divide_set
+        "XaTXa": XaTXa_byte
     }
 
 
@@ -199,6 +195,12 @@ def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, B_random_set, Di
     XbTXb_exclY = XbTXb[:-1].T[:-1]
     XbTY = np.delete(XbTXb[-1], -1)
 
+    print("XaTXa: " + str(len(XaTXa)) + " - " + str(len(XaTXa[0])))
+    print("XbTXa: " + str(len(XbTXa)) + " - " + str(len(XbTXa[0])))
+    print("XaTXb: " + str(len(XaTXb)) + " - " + str(len(XaTXb[0])))
+    print("XbTXb: " + str(len(XbTXb)) + " - " + str(len(XbTXb[0])))
+    print("XbTXb_exclY: " + str(len(XbTXb_exclY)) + " - " + str(len(XbTXb_exclY[0])))
+    
     pp_XTX = np.concatenate((np.concatenate((XaTXa, XbTXa), axis=1), np.concatenate((XaTXb, XbTXb_exclY), axis=1)),axis=0) 
     pp_XTY = np.concatenate((XaTY, XbTY),axis=1).T
 
@@ -210,6 +212,6 @@ def Final_at_B(df, A_randoms_Sumset, Sum_noises_B_Arand, XaTXa, B_random_set, Di
     print('Intercept: ', b0)
     
     return {
-        "coefficients": b1,
+        "coefficients": b1.tolist(),
         "intercept": b0
     }
