@@ -6,6 +6,9 @@ The following algorithms have been applied:
 * Naive Bayes
 * Secure multiparty computation
 
+## Execute linear regression
+Execute the (control.ipynb) notebook in this repository. This is pre-configured on two data stations with complementary datasets.
+
 ## Privacy-preserving Linear Regression (vertically partitioned data)
 _Privacy_preserving_linear_regression.ipynb_ shows how we inmplement the linear regression in a privacy-preserving manner. You can find more details in the notebook. Furthermore, we also dockerized PPLR with using PyTaskManager (https://bitbucket.org/jvsoest/pytaskmanager). Please have a look at the fold <PPLR_Dockerized>
 
